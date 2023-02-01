@@ -23,18 +23,19 @@ def main():
             self.setGeometry(500, 500, 500, 500)
 
         def keyPressEvent(self, event):
+            d = 0.1  # TODO: make a zoom-based delta
             if event.key() == Qt.Key_PageUp and self.zoom < 17:
                 self.zoom += 1
             if event.key() == Qt.Key_PageDown and self.zoom > 0:
                 self.zoom -= 1
             if event.key() == Qt.Key_Left and self.map_ll[0] > 0:
-                self.map_ll[0] -= 1
+                self.map_ll[0] -= d
             if event.key() == Qt.Key_Right and self.map_ll[0] < 179:
-                self.map_ll[0] += 1
+                self.map_ll[0] += d
             if event.key() == Qt.Key_Down and self.map_ll[1] > 0:
-                self.map_ll[1] -= 1
+                self.map_ll[1] -= d
             if event.key() == Qt.Key_Up and self.map_ll[1] < 179:
-                self.map_ll[1] += 1
+                self.map_ll[1] += d
             if event.key() == Qt.Key_Space:
                 self.map_l = (self.map_l + 1) % 3
             self.refresh_map()
