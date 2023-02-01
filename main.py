@@ -14,7 +14,8 @@ def main():
             self.map = QLabel(self)
             self.map.resize(500, 500)
             self.map_ll = [36, 56]
-            self.map_l = 'map'
+            self.map_l = 0
+            self.map_ls = ['map', 'sat', 'sat,skl']
             self.zoom = 6
             self.refresh_map()
 
@@ -34,13 +35,14 @@ def main():
                 self.map_ll[1] -= 1
             if event.key() == Qt.Key_Up and self.map_ll[1] < 179:
                 self.map_ll[1] += 1
-            print(self.map_ll)
+            if event.key() == Qt.Key_Space:
+                self.map_l = (self.map_l + 1) % 3
             self.refresh_map()
 
         def refresh_map(self):
             map_params = {
                 "ll": ','.join(map(str, self.map_ll)),
-                "l": self.map_l,
+                "l": self.map_ls[self.map_l],
                 "z": self.zoom
             }
             session = requests.Session()
