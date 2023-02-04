@@ -1,7 +1,10 @@
+import geocoder
+
+
 def main():
     KEY = ""
     import sys
-    from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel
+    from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QLineEdit
     from PyQt5.QtGui import QPixmap
     from PyQt5.QtCore import Qt
     import requests
@@ -11,19 +14,25 @@ def main():
         def __init__(self):
             super().__init__()
             self.initUI()
+            self.setFocusPolicy(Qt.StrongFocus)
             self.map = QLabel(self)
+            self.text = QLineEdit(self)
             self.map.resize(500, 500)
             self.map_ll = [36, 56]
+            self.point = (36, 56)
             self.map_l = 0
             self.map_ls = ['map', 'sat', 'sat,skl']
             self.zoom = 6
             self.refresh_map()
 
         def initUI(self):
-            self.setGeometry(500, 500, 500, 500)
+            self.setGeometry(500, 300, 500, 600)
 
         def keyPressEvent(self, event):
             d = 0.1  # TODO: make a zoom-based delta
+            if event.key() == Qt.Key_Return:
+                self.map_ll = geocoder.get_coords(self.text.text())
+                self.point = self.map_ll.copy()
             if event.key() == Qt.Key_PageUp and self.zoom < 17:
                 self.zoom += 1
             if event.key() == Qt.Key_PageDown and self.zoom > 0:
@@ -44,7 +53,8 @@ def main():
             map_params = {
                 "ll": ','.join(map(str, self.map_ll)),
                 "l": self.map_ls[self.map_l],
-                "z": self.zoom
+                "z": self.zoom,
+                'pt': f"{self.point[0]},{self.point[1]},pm2dgl"
             }
             session = requests.Session()
             retry = Retry(total=10, connect=5)
