@@ -6,3 +6,5 @@ Space - change map layer
 Left, right, up and down arrows - move map
 
 Pgup, pgdown - change scale
+
+F12 - show/hide postal code
